@@ -6,36 +6,47 @@
 
 		<section>
 			<main>
-				<div
-					class="message"
-					v-for="(msg, index) in messages"
-					:key="index"
-					:class="['message', msg.userId == 1 ? 'teacher' : 'student']"
-				>
-					<img :src="msg.photoURL" :alt="msg.displayName" />
-					<p>
-						{{ msg.text }}
-						<br />
-						{{ msg.createdAt }}
-					</p>
-				</div>
-				<div
-					v-for="(doc, index) in documents"
-					:key="index"
-					:class="'document'"
-					class="position-relative"
-				>
-					<div class="d-flex flex-column align-items-start">
-						<p class="mt-3 fw-bold">VERSIÓN {{ doc.version }}</p>
-						<p class="fw-bold text-primary">{{ doc.name }}.{{ doc.format }}</p>
+				<div v-for="(msg, index) in messages" :key="index">
+					<div v-if="msg.id === 1" :class="['message', 'teacher']">
+						<img :src="msg.photoURL" :alt="msg.displayName" />
 						<p>
-							Documento/{{ doc.format.toUpperCase() }}&nbsp;&nbsp; ({{
-								doc.size
-							}})&nbsp;&nbsp; {{ doc.entrega }}
+							{{ msg.text }}
+							<br />
+							{{ msg.createdAt }}
 						</p>
 					</div>
-					<div class="cloud-icon text-primary fs-4">
-						<i class="fas fa-cloud-download-alt "></i>
+					<div v-else-if="msg.id === 2" :class="['message', 'student']">
+						<img :src="msg.photoURL" :alt="msg.displayName" />
+						<p>
+							{{ msg.text }}
+							<br />
+							{{ msg.createdAt }}
+						</p>
+					</div>
+
+					<div v-else-if="msg.id === 0" class="document position-relative">
+						<div class="d-flex flex-column align-items-start">
+							<p class="mt-3 fw-bold">VERSIÓN {{ msg.version }}</p>
+							<p class="fw-bold text-primary">
+								{{ msg.name }}.{{ msg.format }}
+							</p>
+							<p>
+								Documento/{{ msg.format }}&nbsp;&nbsp; ({{
+									msg.size
+								}})&nbsp;&nbsp; {{ msg.entrega }}
+							</p>
+						</div>
+						<div class="cloud-icon">
+							<a
+								:href="msg.url"
+								data-bs-toggle="tooltip"
+								data-bs-placement="top"
+								:title="msg.url"
+								role="button"
+								aria-disabled="true"
+								><i class="fas fa-cloud-download-alt text-primary fs-4"></i
+							></a>
+						</div>
 					</div>
 				</div>
 
@@ -57,47 +68,36 @@
 </template>
 
 <script>
-import { getTime } from '../../utils/app';
 export default {
 	props: ['messages', 'student'],
 	data() {
 		return {
 			message: '',
-			documents: [],
 		};
 	},
 	mounted() {
 		this.renderMessages();
 	},
 	methods: {
+		renderMessages() {
+			return this.messages.sort(function(a, b) {
+				return new Date(a.createdAt) - new Date(b.createdAt);
+			});
+		},
 		sendMessage() {
 			const messageInfo = {
 				userId: this.student.id,
 				displayName: this.student.displayName,
 				photoURL: this.student.photoURL,
 				text: this.message,
-				createdAt: getTime(),
-			};
-
-			const documentData = {
-				name: 'Primer caso práctico',
-				version: '2',
-				format: 'pdf',
-				size: '3.8MB',
-				entrega: getTime(),
-				urlDowload: 'https://downloadexercices.com/92383k',
+				createdAt: new Date(),
 			};
 
 			this.messages.push(messageInfo);
-			this.documents.push(documentData);
+			console.log(this.messages);
+			this.renderMessages();
 			this.message = '';
 			this.$refs['scrollable'].scrollIntoView({ behaviour: 'smooth' });
-		},
-		whichUser() {
-			this.isUserTeacher = !this.isUserTeacher;
-		},
-		renderMessages() {
-			return this.messages;
 		},
 	},
 };
@@ -241,6 +241,7 @@ input:focus-visible {
 	width: 100%;
 	border-top: 1px rgba(0, 0, 0, 0.226) solid;
 	border-bottom: 1px rgba(0, 0, 0, 0.226) solid;
+	margin-bottom: 1rem;
 }
 
 .wrapper .document p {
