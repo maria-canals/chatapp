@@ -29,12 +29,3 @@ He seguido los siguientes pasos:
 - Font Awesome
 
 ```
-
-### Dudas
-
-```
-- Debería usar más dependencias?
-- Como ordenar los datos precargados por orden decreciente? usar sort?
-- Como diferenciar si un mensaje es un fichero o es texto? hay dos variables donde se guardan los mensajes y los documentos. Documents y messages, no se si debería guardar los mensajes y los documentos en una misma variable y a la hora de hacer el v-for para renderizarlos alli mismo ditingir si es un texto o documento y que se le añada la clase correspondinte para que tenga un formato o otro.
-
-```
