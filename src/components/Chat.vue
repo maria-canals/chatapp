@@ -86,7 +86,7 @@ export default {
 		},
 		sendMessage() {
 			const messageInfo = {
-				userId: this.student.id,
+				id: this.student.id,
 				displayName: this.student.displayName,
 				photoURL: this.student.photoURL,
 				text: this.message,
@@ -94,8 +94,6 @@ export default {
 			};
 
 			this.messages.push(messageInfo);
-			console.log(this.messages);
-			this.renderMessages();
 			this.message = '';
 			this.$refs['scrollable'].scrollIntoView({ behaviour: 'smooth' });
 		},
