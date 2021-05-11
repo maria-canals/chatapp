@@ -12,7 +12,7 @@
 						<p>
 							{{ msg.text }}
 							<br />
-							{{ msg.createdAt }}
+							{{ msg.date }}
 						</p>
 					</div>
 					<div v-else-if="msg.id === 2" :class="['message', 'student']">
@@ -20,7 +20,7 @@
 						<p>
 							{{ msg.text }}
 							<br />
-							{{ msg.createdAt }}
+							{{ msg.date }}
 						</p>
 					</div>
 
@@ -33,7 +33,7 @@
 							<p>
 								Documento/{{ msg.format }}&nbsp;&nbsp; ({{
 									msg.size
-								}})&nbsp;&nbsp; {{ msg.entrega }}
+								}})&nbsp;&nbsp; {{ msg.date }}
 							</p>
 						</div>
 						<div class="cloud-icon">
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
 	props: ['messages', 'student'],
 	data() {
@@ -91,6 +92,7 @@ export default {
 				photoURL: this.student.photoURL,
 				text: this.message,
 				createdAt: new Date(),
+				date: moment(new Date()).format('DD-MM-YYYY/HH:mm') + 'h',
 			};
 
 			this.messages.push(messageInfo);
